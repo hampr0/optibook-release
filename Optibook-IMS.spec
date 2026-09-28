@@ -31,7 +31,7 @@ a = Analysis(
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=['pyarrow'],  # ★ 핵심: pyarrow __version__ 에러 원천 차단 및 용량 최적화
+    excludes=[],  # ★ pyarrow를 제외하지 않고 정식 설치본을 포함하도록 비움
     noarchive=False,
     optimize=0,
 )
