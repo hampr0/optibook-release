@@ -17,6 +17,11 @@ jobs:
       - name: 저장소 체크아웃
         uses: actions/checkout@v4
 
+      # ★ [추가] 빌드 시 .env 파일 자동 생성
+      - name: .env 파일 생성
+        run: |
+          echo "TIDB_PASSWORD=${{ secrets.TIDB_PASSWORD }}" > .env
+
       - name: Python 설정
         uses: actions/setup-python@v5
         with:
