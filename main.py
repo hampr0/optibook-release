@@ -8,7 +8,10 @@ from PyQt6.QtGui import QIcon
 APP_VERSION = "1.0.2"
 from updater import check_and_run_update
 
-from dialogs.auth_dialogs import LoginDialog
+try:
+    from dialogs.auth_dialogs import LoginDialog
+except ModuleNotFoundError:
+    from auth_dialogs import LoginDialog
 from preview_ui import BookSTScannerApp
 
 if __name__ == "__main__":
