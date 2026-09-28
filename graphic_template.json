@@ -1,0 +1,14 @@
+{
+    "target_printer": "OneNote (Desktop)",
+    "font_family": "맑은 고딕",
+    "left": 0,
+    "top": 6,
+    "length": 80,
+    "item_space": 2,
+    "line_space": 1,
+    "indent": 0,
+    "dpi": 203,
+    "size_huge": 40,
+    "size_large": 30,
+    "size_norm": 20
+}
