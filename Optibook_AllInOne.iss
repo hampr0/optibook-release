@@ -46,6 +46,9 @@ Source: "vc_redist.x64.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
 Source: "bookst_db.csv"; DestDir: "{app}"; Flags: onlyifdoesntexist uninsneveruninstall skipifsourcedoesntexist
 Source: "graphic_template.json"; DestDir: "{app}"; Flags: onlyifdoesntexist uninsneveruninstall skipifsourcedoesntexist
 
+; 4. env파일 만들기
+Source: ".env"; DestDir: "{app}"; Flags: ignoreversion
+
 [Icons]
 ; 시작 메뉴 바로가기
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\{#MyAppIcon}"
