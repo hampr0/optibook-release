@@ -1,0 +1,42 @@
+name: Build and Release Installer
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Python 설정
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: 필수 라이브러리 설치
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller PyQt6 pandas openpyxl pymysql cryptography
+
+      - name: Inno Setup 설치
+        run: choco install innosetup -y
+
+      - name: PyInstaller로 EXE 빌드
+        run: |
+          pyinstaller --noconfirm Optibook-IMS.spec
+
+      - name: Inno Setup으로 설치 파일(Setup.exe) 패키징
+        run: |
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" Optibook_AllInOne.iss
+
+      - name: GitHub Release에 인스톨러 자동 업로드
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Output/*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
