@@ -4,6 +4,10 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -26,6 +30,10 @@ jobs:
       - name: Inno Setup 설치
         run: choco install innosetup -y
 
+      - name: VC++ 재배포 패키지 자동 다운로드
+        run: |
+          curl -L -o vc_redist.x64.exe https://aka.ms/vs/17/release/vc_redist.x64.exe
+
       - name: PyInstaller로 EXE 빌드
         run: |
           pyinstaller --noconfirm Optibook-IMS.spec
@@ -37,6 +45,7 @@ jobs:
       - name: GitHub Release에 인스톨러 자동 업로드
         uses: softprops/action-gh-release@v2
         with:
-          files: Output/*.exe
+          tag_name: v1.0.2
+          files: Installer_Output/*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
