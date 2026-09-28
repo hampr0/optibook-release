@@ -5,13 +5,10 @@ from PyQt6.QtWidgets import QApplication, QDialog
 from PyQt6.QtGui import QIcon
 
 # 1. 버전 정보 및 자동 업데이트 모듈 불러오기
-APP_VERSION = "1.0.2"
+from config import APP_VERSION
 from updater import check_and_run_update
 
-try:
-    from dialogs.auth_dialogs import LoginDialog
-except ModuleNotFoundError:
-    from auth_dialogs import LoginDialog
+from dialogs.auth_dialogs import LoginDialog
 from preview_ui import BookSTScannerApp
 
 if __name__ == "__main__":

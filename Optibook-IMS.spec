@@ -1,25 +1,37 @@
 # -*- mode: python ; coding: utf-8 -*-
 from PyInstaller.utils.hooks import collect_all
 
-datas = []
+datas = [
+    ('app_icon.ico', '.'),
+    ('graphic_template.json', '.')
+]
 binaries = []
-hiddenimports = ['pymysql', 'cryptography']
+hiddenimports = [
+    'pymysql', 
+    'cryptography', 
+    'dotenv', 
+    'updater',
+    'dialogs', 
+    'dialogs.auth_dialogs', 
+    'dialogs.admin_dialogs', 
+    'dialogs.data_dialogs'
+]
+
 tmp_ret = collect_all('pymysql')
 datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
 tmp_ret = collect_all('cryptography')
 datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
 
-
 a = Analysis(
     ['main.py'],
-    pathex=[],
+    pathex=['.'],
     binaries=binaries,
     datas=datas,
     hiddenimports=hiddenimports,
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=[],
+    excludes=['pyarrow'],  # ★ 핵심: pyarrow __version__ 에러 원천 차단 및 용량 최적화
     noarchive=False,
     optimize=0,
 )
