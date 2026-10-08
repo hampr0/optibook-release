@@ -1,4 +1,4 @@
-﻿import sys
+import sys
 import json
 import os
 import traceback
@@ -59,7 +59,6 @@ class BookSTScannerApp(QWidget):
         if self.current_user.get('role') == 'MASTER':
             has_store_perm = True
         else:
-            # 중앙 DB app_settings 테이블에서 허용 목록 실시간 확인
             try:
                 conn = get_db_connection()
                 if conn:
@@ -78,7 +77,6 @@ class BookSTScannerApp(QWidget):
             if has_store_perm:
                 self.mode_bar_widget.show()
             else:
-                # 일반 회원사는 모드 전환 바를 완전히 숨겨 기존 납품 검수 화면만 유지
                 self.mode_bar_widget.hide()
                 if hasattr(self, 'store_vendor_group'):
                     self.store_vendor_group.hide()
@@ -102,13 +100,11 @@ class BookSTScannerApp(QWidget):
             btn_error_logs.clicked.connect(lambda: ErrorLogDialog(self).exec())
             self.status_bar_layout.insertWidget(4, btn_error_logs)
 
-            # ★ [신규] 관리자 전용 실시간 클라우드 DB 용량 확인 버튼
             btn_db_storage = QPushButton("📊 DB 용량 모니터링")
             btn_db_storage.setStyleSheet("background-color: #0288D1; color: white; font-weight: bold; padding: 6px 12px; border-radius: 4px;")
             btn_db_storage.clicked.connect(self.show_db_storage_dialog)
             self.status_bar_layout.insertWidget(5, btn_db_storage)
 
-            # ★ [신규] 총괄관리자 직관적 매장 기능 권한 토글 버튼
             btn_store_perm = QPushButton("🏪 매장권한 설정")
             btn_store_perm.setStyleSheet("background-color: #E65100; color: white; font-weight: bold; padding: 6px 12px; border-radius: 4px;")
             btn_store_perm.clicked.connect(lambda: StorePermissionDialog(self).exec())
@@ -172,7 +168,6 @@ del "%~f0"
             QMessageBox.critical(self, "업데이트 실패", f"자동 업데이트 처리 중 오류 발생:\n{e}")
 
     def show_db_storage_dialog(self):
-        """[관리자 전용] TiDB Cloud 스토리지 사용량 및 잔여 용량 실시간 확인 다이얼로그"""
         conn = get_db_connection()
         if not conn:
             QMessageBox.critical(self, "연결 실패", "중앙 DB 서버에 연결할 수 없습니다.")
@@ -375,7 +370,7 @@ del "%~f0"
         self.tabs.currentChanged.connect(self.on_tab_changed)
         
         self.sync_timer = QTimer(self)
-        self.sync_timer.setInterval(30000)  # 10초 -> 30초로 완화하여 UI 프리징 방지
+        self.sync_timer.setInterval(30000)
         self.sync_timer.timeout.connect(self.auto_sync_job)
         self.sync_timer.start()
 
@@ -465,14 +460,12 @@ del "%~f0"
             try:
                 cursor = conn.cursor()
                 
-                # DB의 최신 데이터 상태 조회
                 if comp_id == 'ALL':
                     cursor.execute("SELECT id, status, intake_dt FROM books")
                 else:
                     cursor.execute("SELECT id, status, intake_dt FROM books WHERE company_id=%s", (comp_id,))
                 
                 db_rows = cursor.fetchall()
-                # 고유 식별자(PK id)를 키로 매핑하여 중복 도서 충돌 원천 차단
                 db_id_map = {str(r['id']): r for r in db_rows}
 
                 insert_data = []
@@ -486,12 +479,10 @@ del "%~f0"
                     status = str(r.get('상태', '미입고')).strip()
                     intake_dt = str(r.get('입고일시', '')).strip()
 
-                    # 1. 기존 DB에 있던 도서 (고유 id 기준 1대1 정확한 업데이트)
                     if row_id and row_id != 'nan' and row_id in db_id_map:
                         db_item = db_id_map[row_id]
                         if status != db_item['status']:
                             update_data.append((status, intake_dt, row_id))
-                    # 2. 엑셀로 신규 등록된 도서 (신규 INSERT)
                     else:
                         if status != '삭제':
                             insert_data.append((
@@ -513,7 +504,6 @@ del "%~f0"
                     sql_update = "UPDATE books SET status=%s, intake_dt=%s WHERE id=%s"
                     cursor.executemany(sql_update, update_data)
 
-                # DB 영구 반영 커밋
                 conn.commit()
                 conn.close()
                 
@@ -525,6 +515,22 @@ del "%~f0"
                 self.log(f"중앙 DB 전송 실패(에러): {e}", is_error=True)
         
         self.is_saving = False 
+
+    def update_single_book_to_db(self, row_id, status, intake_dt):
+        """[1단계 최적화] 10,000건 전체를 순회하지 않고 스캔된 단 1건만 초고속 업데이트"""
+        if not row_id or str(row_id).lower() == 'nan':
+            return
+        conn = get_db_connection()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                sql = "UPDATE books SET status=%s, intake_dt=%s WHERE id=%s"
+                cursor.execute(sql, (status, intake_dt, row_id))
+                conn.commit()
+                conn.close()
+                self.is_online = True
+            except Exception as e:
+                self.log(f"단건 DB 업데이트 실패: {e}", is_error=True)
 
     def auto_sync_job(self):
         if self.is_saving: return
@@ -878,7 +884,6 @@ del "%~f0"
         layout.setContentsMargins(10, 10, 10, 10)
         layout.setSpacing(8)
 
-        # ★ [모드 전환 바] 권한별 숨김/표시를 위해 QWidget 컨테이너로 감싸기
         self.mode_bar_widget = QWidget()
         mode_bar = QHBoxLayout(self.mode_bar_widget)
         mode_bar.setContentsMargins(0, 0, 0, 0)
@@ -896,7 +901,6 @@ del "%~f0"
         mode_bar.addWidget(self.btn_mode_store, 1)
         layout.addWidget(self.mode_bar_widget)
 
-        # ★ [매장 모드 전용 매입처 툴바]
         self.store_vendor_group = QGroupBox("매장 매입처(거래처) 선택")
         self.store_vendor_group.setStyleSheet("QGroupBox { font-weight: bold; color: #2E7D32; background-color: #E8F5E9; padding: 6px; border-radius: 4px; }")
         store_vendor_layout = QHBoxLayout(self.store_vendor_group)
@@ -921,7 +925,6 @@ del "%~f0"
         self.line_custom_vendor.setFixedWidth(160)
         self.line_custom_vendor.returnPressed.connect(self.on_custom_vendor_entered)
         
-        # 거래처 자동완성 설정
         self.vendor_completer = QCompleter(self)
         self.vendor_completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         self.vendor_completer.setFilterMode(Qt.MatchFlag.MatchContains)
@@ -930,7 +933,7 @@ del "%~f0"
 
         store_vendor_layout.addWidget(self.line_custom_vendor)
         layout.addWidget(self.store_vendor_group)
-        self.store_vendor_group.hide()  # 기본은 납품 모드이므로 숨김
+        self.store_vendor_group.hide()
 
         top_bar = QHBoxLayout()
         self.btn_all_select = QPushButton("전체지정")
@@ -995,7 +998,6 @@ del "%~f0"
         self.cb_individual = QCheckBox("권수별 개별인쇄")
         self.cb_isbn_print = QCheckBox("ISBN 표시")
         self.cb_print_active = QCheckBox("인쇄"); self.cb_print_active.setChecked(True)
-        # ★ 프로그램 자체 비프음 On/Off 옵션 (리더기 하드웨어 소리와 중복 방지 위해 기본 꺼짐)
         self.cb_sound_active = QCheckBox("스피커 소리"); self.cb_sound_active.setChecked(False)
         
         self.combo_format = QComboBox()
@@ -1030,14 +1032,14 @@ del "%~f0"
         self.lbl_scan_result = QLabel("스캔 대기 중..."); self.lbl_scan_result.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lbl_scan_result.setStyleSheet("font-size: 20px; font-weight: bold; color: gray; margin: 3px;")
         layout.addWidget(self.lbl_scan_result)
+
     def set_inspect_mode(self, is_store_mode):
-        """납품 검수 모드 <-> 매장 재고 입고 모드 스위칭"""
         self.store_mode = is_store_mode
         if is_store_mode:
             self.btn_mode_store.setStyleSheet("font-size: 15px; font-weight: bold; padding: 10px; background-color: #2E7D32; color: white; border-radius: 4px;")
             self.btn_mode_delivery.setStyleSheet("font-size: 15px; font-weight: bold; padding: 10px; background-color: #ECEFF1; color: #455A64; border-radius: 4px;")
             self.store_vendor_group.show()
-            self.cb_print_active.setChecked(False)  # 매장 진열용은 간지 인쇄 기본 끔
+            self.cb_print_active.setChecked(False)
             self.line_supplier.setText(f"[매장재고] 공급처: {self.store_vendor}")
             self.lbl_scan_result.setText(f"🏪 매장 입고 모드 작동 중: 바코드를 스캔하면 [{self.store_vendor}] 매장재고로 즉시 입고됩니다.")
             self.lbl_scan_result.setStyleSheet("font-size: 17px; font-weight: bold; color: #2E7D32;")
@@ -1045,7 +1047,7 @@ del "%~f0"
             self.btn_mode_delivery.setStyleSheet("font-size: 15px; font-weight: bold; padding: 10px; background-color: #1976D2; color: white; border-radius: 4px;")
             self.btn_mode_store.setStyleSheet("font-size: 15px; font-weight: bold; padding: 10px; background-color: #ECEFF1; color: #455A64; border-radius: 4px;")
             self.store_vendor_group.hide()
-            self.cb_print_active.setChecked(True)   # 납품용은 간지 인쇄 켬
+            self.cb_print_active.setChecked(True)
             self.refresh_inspect_tab()
         self.ensure_barcode_focus()
 
@@ -1075,6 +1077,7 @@ del "%~f0"
             self.line_supplier.setText(f"[매장재고] 공급처: {self.store_vendor}")
             QMessageBox.information(self, "거래처 지정", f"매장 입고 거래처가 '[ {text} ]' 로 지정되었습니다.")
         self.ensure_barcode_focus()
+
     def open_job_list_dialog(self):
         if self.df.empty:
             QMessageBox.warning(self, "안내", "등록된 도서 데이터가 없어 지정할 수 없습니다.")
@@ -1148,7 +1151,6 @@ del "%~f0"
         if self.df.empty:
             return
 
-        # 활성화된 작업 목록 필터링 적용
         if self.selected_jobs:
             mask = self.df.apply(lambda r: (
                 str(r.get('거래처', '')).strip(), 
@@ -1167,7 +1169,6 @@ del "%~f0"
         else:
             target_df = self.df
 
-        # 도서명, ISBN, 저자 대상 조회 (목록 탭과 동일한 검색 방식)
         search_mask = (target_df['도서명'].astype(str).str.lower().str.contains(query, na=False)) | \
                       (target_df['ISBN_Clean'].astype(str).str.contains(query, na=False)) | \
                       (target_df['저자'].astype(str).str.lower().str.contains(query, na=False))
@@ -1192,7 +1193,6 @@ del "%~f0"
         if not isbn:
             return
 
-        # 10자리 미만의 비정상 짧은 바코드 10회 연속 감지기
         if len(isbn) < 10:
             self.short_scan_count += 1
             if self.short_scan_count >= 10:
@@ -1218,14 +1218,12 @@ del "%~f0"
             now_dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             now_date = datetime.now().strftime("%Y-%m-%d")
 
-            # 1. 사내 DB 이력 조회 (메모리 -> 중앙 서버 원장 순차 검색, 삭제된 이력도 메타데이터로 활용)
             ref_book = None
             if not self.df.empty and 'ISBN_Clean' in self.df.columns:
                 mem_matches = self.df[self.df['ISBN_Clean'] == isbn]
                 if not mem_matches.empty:
                     ref_book = mem_matches.iloc[-1].to_dict()
 
-            # 메모리에 없으면 중앙 DB 서버에서 과거 등록 이력(삭제 도서 포함) 직접 조회
             if not ref_book:
                 conn = get_db_connection()
                 if conn:
@@ -1242,14 +1240,12 @@ del "%~f0"
                         pass
 
             if ref_book:
-                # 과거에 한 번이라도 등록된 적이 있는 경우 -> 서지 정보 자동 완성
                 title = str(ref_book.get('도서명', f'도서_{isbn}'))
                 author = str(ref_book.get('저자', ''))
                 pub = str(ref_book.get('출판사', ''))
                 price = str(ref_book.get('정가', '0'))
                 remarks = "[사내이력]"
             else:
-                # 완전 신규 도서 -> 1초 간이 팝업 호출 (실물 정가 확인)
                 dlg = QuickNewBookDialog(isbn, self.store_vendor, self)
                 if dlg.exec() != QDialog.DialogCode.Accepted:
                     self.lbl_scan_result.setText("매장 도서 등록이 취소되었습니다.")
@@ -1262,10 +1258,8 @@ del "%~f0"
                 pub = b_info['출판사']
                 remarks = "[수동등록]"
 
-            # 매장재고 도서 수 기준 순번 계산 (매장 1호 도서부터 시작)
             store_count = len(self.df[self.df['납품처'] == '매장재고']) if not self.df.empty else 0
 
-            # 매장재고 데이터프레임 행 생성
             new_row = {
                 'id': '',
                 '등록일자': now_date,
@@ -1287,11 +1281,28 @@ del "%~f0"
                 'company_id': comp_id
             }
 
-            self.df = pd.concat([self.df, pd.DataFrame([new_row])], ignore_index=True)
-            self.save_database()
-            self.refresh_all_tables()
+            # 1. DB에 단 1건만 직접 INSERT 후 발급된 고유 id 획득
+            conn = get_db_connection()
+            if conn:
+                try:
+                    cursor = conn.cursor()
+                    sql_ins = """INSERT INTO books (reg_date, reg_dt, client, delivery, content, seq, title, author, publisher, price, qty, isbn, isbn_clean, status, intake_dt, remarks, company_id) 
+                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                    cursor.execute(sql_ins, (
+                        new_row['등록일자'], new_row['등록일시'], new_row['거래처'], new_row['납품처'],
+                        new_row['내용'], new_row['순번'], new_row['도서명'], new_row['저자'],
+                        new_row['출판사'], new_row['정가'], new_row['권수'], new_row['ISBN'],
+                        new_row['ISBN_Clean'], new_row['상태'], new_row['입고일시'], new_row['비고'], new_row['company_id']
+                    ))
+                    conn.commit()
+                    new_row['id'] = str(cursor.lastrowid)
+                    conn.close()
+                except Exception as e:
+                    self.log(f"매장도서 DB 등록 실패: {e}", is_error=True)
 
-            # 최근 입고 내역 테이블에 즉시 표시
+            # 2. 메모리 DataFrame에만 가볍게 덧붙임 (1만 건 표 전체 리셋 생략)
+            self.df = pd.concat([self.df, pd.DataFrame([new_row])], ignore_index=True)
+
             self.recent_scans.insert(0, new_row)
             recent_df = pd.DataFrame(self.recent_scans)
             self.render_inspect_table(self.table_recent, recent_df, append_sum=False)
@@ -1400,17 +1411,25 @@ del "%~f0"
         self.ensure_barcode_focus()
 
     def execute_book_intake(self, target_idx):
+        now_dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        # 1. 메모리(DataFrame) 단 1행만 즉시 갱신
         self.df.at[target_idx, '상태'] = '입고'
-        self.df.at[target_idx, '입고일시'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.save_database()
+        self.df.at[target_idx, '입고일시'] = now_dt
         
         row_data = self.df.loc[target_idx]
+        book_id = str(row_data.get('id', '')).strip()
+
+        # 2. 전체 1만건 save_database() 대신 단 1건만 DB에 초고속 반영
+        self.update_single_book_to_db(book_id, '입고', now_dt)
+        
         vendor = str(row_data.get('납품처', ''))
         title = str(row_data.get('도서명', ''))
         
         self.lbl_scan_result.setText(f"간지 인쇄 및 입고 처리 완료: [{vendor}] {title}")
         self.lbl_scan_result.setStyleSheet("font-size: 20px; font-weight: bold; color: blue;")
         
+        # 3. 라벨 인쇄
         if self.cb_print_active.isChecked():
             try:
                 qty = int(float(row_data.get('권수', 1)))
@@ -1427,6 +1446,7 @@ del "%~f0"
             else:
                 self.trigger_physical_print_for_row(row_data, silent=True)
             
+        # 4. 하단 최근 내역에 1행 추가
         self.recent_scans.insert(0, row_data)
         recent_df = pd.DataFrame(self.recent_scans)
         self.render_inspect_table(self.table_recent, recent_df, append_sum=False)
@@ -1745,19 +1765,19 @@ del "%~f0"
 
         self.spin_huge = QSpinBox()
         self.spin_huge.setRange(12, 200)
-        self.spin_huge.setValue(40)  # ★ 기본값: 40
+        self.spin_huge.setValue(40)
         self.spin_huge.valueChanged.connect(self.update_preview)
         control_layout.addRow("1. 순번 숫자 크기 (대):", self.spin_huge)
 
         self.spin_large = QSpinBox()
         self.spin_large.setRange(10, 200)
-        self.spin_large.setValue(30)  # ★ 기본값: 30
+        self.spin_large.setValue(30)
         self.spin_large.valueChanged.connect(self.update_preview)
         control_layout.addRow("2. 기본 정보/납품처 크기 (중):", self.spin_large)
 
         self.spin_norm = QSpinBox()
         self.spin_norm.setRange(6, 200)
-        self.spin_norm.setValue(20)  # ★ 기본값: 20
+        self.spin_norm.setValue(20)
         self.spin_norm.valueChanged.connect(self.update_preview)
         control_layout.addRow("3. 도서명/정가 크기 (소):", self.spin_norm)
         
@@ -2184,7 +2204,7 @@ del "%~f0"
                 print(f"템플릿 로드 실패: {e}")
 
     def render_inspect_table(self, table_widget, df_data, append_sum=False):
-        table_widget.setUpdatesEnabled(False)  # ★ 대량 렌더링 중 화면 다시 그리기 억제 (속도 대폭 향상)
+        table_widget.setUpdatesEnabled(False)
         try:
             display_cols = ['상태', '권수', 'ISBN_Clean', '도서명', '출판사', '정가', '비고', '납품처']
             if not df_data.empty and '비고' not in df_data.columns:
@@ -2247,19 +2267,18 @@ del "%~f0"
                     item_sum.setFont(QFont("Arial", 10, QFont.Weight.Bold)); item_sum.setBackground(QColor("#f0f0f0")) 
                     table_widget.setItem(sum_r, c_idx, item_sum)
 
-            # ★ [최적화] CPU를 갉아먹는 resizeColumnsToContents 대신 최적 고정 폭 지정
             header = table_widget.horizontalHeader()
             header.setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
-            table_widget.setColumnWidth(0, 55)   # 구분
-            table_widget.setColumnWidth(1, 45)   # 수량
-            table_widget.setColumnWidth(2, 125)  # ISBN
-            header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch) # 도서명 자동 확장
-            table_widget.setColumnWidth(4, 110)  # 출판사
-            table_widget.setColumnWidth(5, 75)   # 정가
-            table_widget.setColumnWidth(6, 85)   # 비고
-            table_widget.setColumnWidth(7, 100)  # 납품처
+            table_widget.setColumnWidth(0, 55)
+            table_widget.setColumnWidth(1, 45)
+            table_widget.setColumnWidth(2, 125)
+            header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+            table_widget.setColumnWidth(4, 110)
+            table_widget.setColumnWidth(5, 75)
+            table_widget.setColumnWidth(6, 85)
+            table_widget.setColumnWidth(7, 100)
         finally:
-            table_widget.setUpdatesEnabled(True)  # 화면 렌더링 즉시 재개
+            table_widget.setUpdatesEnabled(True)
 
     def refresh_all_tables(self):
         if hasattr(self, 'client_completer'):
@@ -2275,7 +2294,6 @@ del "%~f0"
             self.lbl_grand_total.setText("총 합계 | 대기 중...")
             return
 
-        # ★ 1. 갱신 전 콤보박스 선택값, 스크롤 위치, 선택된 도서 행 기억
         current_vendor = self.combo_list_vendor.currentText()
         list_scroll = self.table_list.verticalScrollBar().value()
         summary_scroll = self.table_summary.verticalScrollBar().value()
@@ -2287,7 +2305,6 @@ del "%~f0"
             if item:
                 selected_list_orig_idx = item.data(Qt.ItemDataRole.UserRole)
 
-        # 콤보박스 갱신 후 이전 선택값 복원
         self.combo_list_vendor.blockSignals(True)
         self.combo_list_vendor.clear()
         self.combo_list_vendor.addItem("전체")
@@ -2298,10 +2315,8 @@ del "%~f0"
             self.combo_list_vendor.setCurrentText(current_vendor)
         self.combo_list_vendor.blockSignals(False)
 
-        # 목록 탭 표 갱신
         self.search_list()
 
-        # ★ 2. 스크롤 위치 및 선택된 행 복원
         self.table_list.verticalScrollBar().setValue(list_scroll)
         if selected_list_orig_idx is not None:
             for r in range(self.table_list.rowCount()):
@@ -2310,7 +2325,6 @@ del "%~f0"
                     self.table_list.selectRow(r)
                     break
 
-        # 집계 탭 렌더링
         batch_cols = ['거래처', '납품처']
         unique_batches = self.df[batch_cols].drop_duplicates().reset_index(drop=True)
         
@@ -2340,16 +2354,15 @@ del "%~f0"
             item_vendor = QTableWidgetItem(disp_vendor)
             item_vendor.setData(Qt.ItemDataRole.UserRole, (c, v))
             
-            # 입고율 계산 (100%: 초록, 진행 중: 노랑/호박색, 0%: 회색)
             rate = (v_d / v_t * 100.0) if v_t > 0 else 0.0
             item_rate = QTableWidgetItem(f"{rate:.1f}%")
             item_rate.setFont(QFont("Arial", 10, QFont.Weight.Bold))
             if rate >= 100.0:
-                item_rate.setForeground(QColor("#2E7D32"))  # 100% 완료: 선명한 초록색
+                item_rate.setForeground(QColor("#2E7D32"))
             elif rate > 0.0:
-                item_rate.setForeground(QColor("#E65100"))  # 진행 중: 눈에 잘 띄는 진한 노랑(호박색)
+                item_rate.setForeground(QColor("#E65100"))
             else:
-                item_rate.setForeground(QColor("#9E9E9E"))  # 0%: 차분한 회색
+                item_rate.setForeground(QColor("#9E9E9E"))
 
             self.table_summary.setItem(i, 0, item_vendor)
             self.table_summary.setItem(i, 1, QTableWidgetItem(f"{v_t:,}"))
@@ -2364,7 +2377,7 @@ del "%~f0"
         self.lbl_grand_total.setText(f"총 합계 | 전체: {t_all:,} 권 / 입고: {d_all:,} 권 ({total_rate:.1f}%) / 미입고: {p_all:,} 권 / 총액: {int(price_all):,} 원")
 
     def render_table(self, table_widget, df_data, show_time=False, append_sum=True):
-        table_widget.setUpdatesEnabled(False)  # ★ 대량 데이터 렌더링 중 GUI 리페인트 차단
+        table_widget.setUpdatesEnabled(False)
         try:
             if show_time: 
                 display_cols = ['입고일시', '내용', '상태', '순번', '도서명', '저자', '출판사', '정가', '권수', 'ISBN_Clean']
@@ -2441,7 +2454,6 @@ del "%~f0"
                     item_sum.setBackground(QColor("#f0f0f0")) 
                     table_widget.setItem(sum_r, c_idx, item_sum)
 
-            # ★ [최적화] 대량 연산 대신 도서명 자동 확장 및 기본 너비 설정
             header = table_widget.horizontalHeader()
             header.setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
             for c_idx, col_name in enumerate(actual_cols):
@@ -2456,7 +2468,7 @@ del "%~f0"
                 elif col_name == '입고일시':
                     table_widget.setColumnWidth(c_idx, 140)
         finally:
-            table_widget.setUpdatesEnabled(True)  # 화면 렌더링 즉시 재개
+            table_widget.setUpdatesEnabled(True)
 
     def on_book_double_clicked(self, row, col):
         sender_table = self.sender(); item = sender_table.item(row, col)
@@ -2481,24 +2493,22 @@ del "%~f0"
         self.ensure_barcode_focus()
 
     def on_tab_changed(self, index):
-        """탭 전환 시 시각적 프레임 드롭을 방지하기 위해 탭이 먼저 부드럽게 넘어간 뒤 해당 탭만 지연 로딩"""
         QTimer.singleShot(10, lambda: self._lazy_load_tab(index))
 
     def _lazy_load_tab(self, index):
-        if index == 0:    # 1. 등록 탭 -> 거래처 자동완성만 가볍게 갱신
+        if index == 0:
             self.refresh_client_completer()
-        elif index == 1:  # 2. 검수 탭 -> 검수 대상 및 바코드 포커스
+        elif index == 1:
             self.refresh_inspect_tab()
             self.ensure_barcode_focus()
-        elif index == 2:  # 3. 목록 탭 -> 목록 표만 검색/표시
+        elif index == 2:
             self.search_list()
-        elif index == 4:  # 5. 집계 탭 -> 집계 표만 계산/표시
+        elif index == 4:
             self.render_summary_tab()
-        elif index == 5:  # 6. 라벨 설정 탭 -> 테스트 도서 콤보만 갱신
+        elif index == 5:
             self.refresh_test_data_combo()
 
     def render_summary_tab(self):
-        """[독립 렌더링] 5. 집계 탭만 빠르게 계산하여 화면 깜빡임 없이 출력"""
         if self.df.empty:
             self.table_summary.clear()
             self.table_summary.setRowCount(0)
@@ -2560,8 +2570,8 @@ del "%~f0"
             self.lbl_grand_total.setText(f"총 합계 | 전체: {t_all:,} 권 / 입고: {d_all:,} 권 ({total_rate:.1f}%) / 미입고: {p_all:,} 권 / 총액: {int(price_all):,} 원")
         finally:
             self.table_summary.setUpdatesEnabled(True)
+
 class QuickNewBookDialog(QDialog):
-    """[매장 신규 도서] 뒤표지 실물 정가 확인용 1초 간이 등록 다이얼로그"""
     def __init__(self, isbn, default_vendor, parent=None):
         super().__init__(parent)
         self.isbn = isbn
@@ -2606,7 +2616,6 @@ class QuickNewBookDialog(QDialog):
         btn_ok.clicked.connect(self.accept)
         layout.addWidget(btn_ok)
 
-        # 정가 입력창에 즉시 포커스 설정
         self.line_price.setFocus()
         self.line_price.returnPressed.connect(self.accept)
 
@@ -2622,8 +2631,8 @@ class QuickNewBookDialog(QDialog):
             '저자': self.line_author.text().strip(),
             '출판사': self.line_pub.text().strip()
         }
+
 class StorePermissionDialog(QDialog):
-    """[총괄관리자 전용] 매장 입고 모드를 허용할 회원사 직관적 체크박스 설정창"""
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("🏪 매장 재고 입고 모드 권한 관리")
@@ -2646,21 +2655,18 @@ class StorePermissionDialog(QDialog):
         self.form_layout = QVBoxLayout(container)
         self.form_layout.setSpacing(8)
 
-        # 1. DB에서 등록된 전체 회원사 목록 가져오기
         companies = []
         conn = get_db_connection()
         allowed_list = []
         if conn:
             try:
                 cursor = conn.cursor()
-                # 설정 테이블 자동 생성
                 cursor.execute("""
                     CREATE TABLE IF NOT EXISTS app_settings (
                         setting_key VARCHAR(50) PRIMARY KEY,
                         setting_val TEXT
                     )
                 """)
-                # 현재 허용된 업체 목록 조회
                 cursor.execute("SELECT setting_val FROM app_settings WHERE setting_key='store_allowed_companies'")
                 row = cursor.fetchone()
                 if row and row['setting_val']:
@@ -2668,14 +2674,12 @@ class StorePermissionDialog(QDialog):
                 else:
                     allowed_list = ['COMP_A']
 
-                # 전체 회원사 목록 조회
                 cursor.execute("SELECT DISTINCT company_id, user_name FROM users WHERE company_id != 'ALL' AND company_id != ''")
                 companies = cursor.fetchall()
                 conn.close()
             except Exception as e:
                 print(f"권한 목록 조회 오류: {e}")
 
-        # 2. 업체별 체크박스 생성
         for comp in companies:
             cid = comp['company_id']
             cname = comp['user_name']

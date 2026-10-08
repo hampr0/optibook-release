@@ -3,7 +3,7 @@ import sys
 from dotenv import load_dotenv
 
 # 앱 버전 설정
-CURRENT_APP_VERSION = "1.0.2"
+CURRENT_APP_VERSION = "1.0.3"
 APP_VERSION = CURRENT_APP_VERSION  # ★ main.py 및 updater 호환용 추가
 
 # 기본 경로 및 실행 디렉터리 고정
