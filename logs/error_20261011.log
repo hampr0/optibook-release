@@ -1,0 +1,344 @@
+
+======================================================================
+발생일시: 2026-10-11 13:22:13
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 3919, in <lambda>
+    QTimer.singleShot(10, lambda: self._lazy_load_tab(index))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 3933, in _lazy_load_tab
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2809, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 13:22:19
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2749, in on_schedule_calendar_clicked
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2809, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 13:22:38
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2749, in on_schedule_calendar_clicked
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2809, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 13:22:41
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2665, in <lambda>
+    self.btn_sched_filter_today.clicked.connect(lambda: self.set_schedule_filter('TODAY'))
+                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2759, in set_schedule_filter
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2809, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 13:22:43
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2749, in on_schedule_calendar_clicked
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2809, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 13:51:47
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2749, in on_schedule_calendar_clicked
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2809, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 13:51:53
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2749, in on_schedule_calendar_clicked
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2809, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 13:51:57
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2749, in on_schedule_calendar_clicked
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2809, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 13:51:58
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2749, in on_schedule_calendar_clicked
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2809, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 13:52:00
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2749, in on_schedule_calendar_clicked
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2809, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 13:52:01
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2657, in <lambda>
+    self.btn_sched_filter_all.clicked.connect(lambda: self.set_schedule_filter('ALL'))
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2759, in set_schedule_filter
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2809, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 13:52:02
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2665, in <lambda>
+    self.btn_sched_filter_today.clicked.connect(lambda: self.set_schedule_filter('TODAY'))
+                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2759, in set_schedule_filter
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2809, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 13:52:02
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2661, in <lambda>
+    self.btn_sched_filter_urgent.clicked.connect(lambda: self.set_schedule_filter('URGENT'))
+                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2759, in set_schedule_filter
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2809, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 13:52:03
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2657, in <lambda>
+    self.btn_sched_filter_all.clicked.connect(lambda: self.set_schedule_filter('ALL'))
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2759, in set_schedule_filter
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2809, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 13:52:04
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2749, in on_schedule_calendar_clicked
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2809, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 13:52:32
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2749, in on_schedule_calendar_clicked
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2809, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 13:52:38
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2749, in on_schedule_calendar_clicked
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2809, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 14:04:56
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4188, in <lambda>
+    QTimer.singleShot(10, lambda: self._lazy_load_tab(index))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4202, in _lazy_load_tab
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2932, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 14:05:00
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2824, in on_schedule_calendar_clicked
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2932, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================
+
+======================================================================
+발생일시: 2026-10-11 14:06:27
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 're' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4188, in <lambda>
+    QTimer.singleShot(10, lambda: self._lazy_load_tab(index))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4202, in _lazy_load_tab
+    self.render_schedule_tab()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2932, in render_schedule_tab
+    match_date = re.search(r'(\d{1,2})월\s*(\d{1,2})일', rem_str)
+                 ^^
+NameError: name 're' is not defined. Did you forget to import 're'
+======================================================================

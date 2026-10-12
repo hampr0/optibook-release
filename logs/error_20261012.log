@@ -1,0 +1,264 @@
+
+======================================================================
+발생일시: 2026-10-12 01:27:36
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 'actual_cols' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 3562, in on_schedule_double_clicked
+    self.jump_to_inspect_from_schedule()
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 3649, in jump_to_inspect_from_schedule
+    self.set_inspect_mode(False) # 납품 검수 모드
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 1645, in set_inspect_mode
+    self.render_inspect_table(self.table_recent, pd.DataFrame(delivery_scans), append_sum=False)
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4291, in render_inspect_table
+    for c_idx, col_name in enumerate(actual_cols):
+                                     ^^^^^^^^^^^
+NameError: name 'actual_cols' is not defined
+======================================================================
+
+======================================================================
+발생일시: 2026-10-12 02:26:21
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 'actual_cols' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 1425, in <lambda>
+    self.btn_mode_store.clicked.connect(lambda: self.set_inspect_mode(True))
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 1687, in set_inspect_mode
+    self.render_inspect_table(self.table_recent, pd.DataFrame(store_scans), append_sum=False)
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4330, in render_inspect_table
+    for c_idx, col_name in enumerate(actual_cols):
+                                     ^^^^^^^^^^^
+NameError: name 'actual_cols' is not defined
+======================================================================
+
+======================================================================
+발생일시: 2026-10-12 21:35:35
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 'color_red' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 1825, in search_inspect_table
+    self.render_inspect_table(self.table_to_inspect, matches, append_sum=False)
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4364, in render_inspect_table
+    item.setForeground(color_red)
+                       ^^^^^^^^^
+NameError: name 'color_red' is not defined
+======================================================================
+
+======================================================================
+발생일시: 2026-10-12 21:35:35
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 'color_red' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 1825, in search_inspect_table
+    self.render_inspect_table(self.table_to_inspect, matches, append_sum=False)
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4364, in render_inspect_table
+    item.setForeground(color_red)
+                       ^^^^^^^^^
+NameError: name 'color_red' is not defined
+======================================================================
+
+======================================================================
+발생일시: 2026-10-12 21:35:35
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 'color_red' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 1825, in search_inspect_table
+    self.render_inspect_table(self.table_to_inspect, matches, append_sum=False)
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4364, in render_inspect_table
+    item.setForeground(color_red)
+                       ^^^^^^^^^
+NameError: name 'color_red' is not defined
+======================================================================
+
+======================================================================
+발생일시: 2026-10-12 21:35:46
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 'color_blue' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 1825, in search_inspect_table
+    self.render_inspect_table(self.table_to_inspect, matches, append_sum=False)
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4361, in render_inspect_table
+    item.setForeground(color_blue)
+                       ^^^^^^^^^^
+NameError: name 'color_blue' is not defined
+======================================================================
+
+======================================================================
+발생일시: 2026-10-12 21:35:46
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 'color_blue' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 1825, in search_inspect_table
+    self.render_inspect_table(self.table_to_inspect, matches, append_sum=False)
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4361, in render_inspect_table
+    item.setForeground(color_blue)
+                       ^^^^^^^^^^
+NameError: name 'color_blue' is not defined
+======================================================================
+
+======================================================================
+발생일시: 2026-10-12 21:35:47
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 'color_blue' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 1825, in search_inspect_table
+    self.render_inspect_table(self.table_to_inspect, matches, append_sum=False)
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4361, in render_inspect_table
+    item.setForeground(color_blue)
+                       ^^^^^^^^^^
+NameError: name 'color_blue' is not defined
+======================================================================
+
+======================================================================
+발생일시: 2026-10-12 21:35:47
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 'color_blue' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 1825, in search_inspect_table
+    self.render_inspect_table(self.table_to_inspect, matches, append_sum=False)
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4361, in render_inspect_table
+    item.setForeground(color_blue)
+                       ^^^^^^^^^^
+NameError: name 'color_blue' is not defined
+======================================================================
+
+======================================================================
+발생일시: 2026-10-12 21:35:49
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 'color_red' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 1825, in search_inspect_table
+    self.render_inspect_table(self.table_to_inspect, matches, append_sum=False)
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4364, in render_inspect_table
+    item.setForeground(color_red)
+                       ^^^^^^^^^
+NameError: name 'color_red' is not defined
+======================================================================
+
+======================================================================
+발생일시: 2026-10-12 21:35:50
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 'color_red' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 1825, in search_inspect_table
+    self.render_inspect_table(self.table_to_inspect, matches, append_sum=False)
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4364, in render_inspect_table
+    item.setForeground(color_red)
+                       ^^^^^^^^^
+NameError: name 'color_red' is not defined
+======================================================================
+
+======================================================================
+발생일시: 2026-10-12 21:35:50
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 'color_red' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 1825, in search_inspect_table
+    self.render_inspect_table(self.table_to_inspect, matches, append_sum=False)
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4364, in render_inspect_table
+    item.setForeground(color_red)
+                       ^^^^^^^^^
+NameError: name 'color_red' is not defined
+======================================================================
+
+======================================================================
+발생일시: 2026-10-12 21:35:52
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 'color_red' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 1825, in search_inspect_table
+    self.render_inspect_table(self.table_to_inspect, matches, append_sum=False)
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4364, in render_inspect_table
+    item.setForeground(color_red)
+                       ^^^^^^^^^
+NameError: name 'color_red' is not defined
+======================================================================
+
+======================================================================
+발생일시: 2026-10-12 21:36:10
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 'color_red' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2054, in process_barcode
+    self.render_inspect_table(self.table_to_inspect, matches, append_sum=False)
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4364, in render_inspect_table
+    item.setForeground(color_red)
+                       ^^^^^^^^^
+NameError: name 'color_red' is not defined
+======================================================================
+
+======================================================================
+발생일시: 2026-10-12 21:36:16
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 'color_red' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2054, in process_barcode
+    self.render_inspect_table(self.table_to_inspect, matches, append_sum=False)
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4364, in render_inspect_table
+    item.setForeground(color_red)
+                       ^^^^^^^^^
+NameError: name 'color_red' is not defined
+======================================================================
+
+======================================================================
+발생일시: 2026-10-12 21:40:14
+회사/사용자: ALL / ssbs_master
+컴퓨터/OS: DESKTOP-GCK9VQC / Windows 11
+스레드명: MainThread
+오류내용: NameError: name 'color_red' is not defined
+상세 스택 트레이스:
+Traceback (most recent call last):
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 2054, in process_barcode
+    self.render_inspect_table(self.table_to_inspect, matches, append_sum=False)
+  File "C:\Users\wjdgh\Downloads\optibook-ims-improved\preview_ui.py", line 4364, in render_inspect_table
+    item.setForeground(color_red)
+                       ^^^^^^^^^
+NameError: name 'color_red' is not defined
+======================================================================

@@ -1,0 +1,27 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.class
+
+# Local environment & secrets (중요: DB 접속 비밀번호 보안)
+.env
+*.env
+
+# Local state & database cache (로컬 데이터 및 로그인 세션 캐시)
+bookst_db.csv
+app_state.json
+login_state.json
+offline_auth.json
+optibook_error.log
+
+# Build & Installer outputs (빌드 및 인스톨러 생성 산출물)
+build/
+dist/
+Installer_Output/
+vc_redist.x64.exe
+*.exe
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
