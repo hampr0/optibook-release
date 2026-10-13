@@ -1861,6 +1861,8 @@ del "%~f0"
         self.cb_one_page = QCheckBox("1장만인쇄")
         self.cb_individual = QCheckBox("권수별 개별인쇄")
         self.cb_isbn_print = QCheckBox("ISBN 표시")
+        self.cb_print_price = QCheckBox("정가 표시"); self.cb_print_price.setChecked(True)
+        self.cb_print_sale_price = QCheckBox("판매가 표시"); self.cb_print_sale_price.setChecked(True)
         self.cb_print_active = QCheckBox("인쇄"); self.cb_print_active.setChecked(True)
         self.cb_sound_active = QCheckBox("스피커 소리"); self.cb_sound_active.setChecked(False)
         
@@ -1875,6 +1877,12 @@ del "%~f0"
         self.cb_one_page.setToolTip("주문 권수가 여러 권(2권 이상)이어도 라벨 간지를 무조건 1장만 출력합니다.")
         self.cb_individual.setToolTip("주문 권수가 여러 권일 때 1-3, 2-3, 3-3 등 권수별 개별 간지를 분할 인쇄합니다.")
         self.cb_isbn_print.setToolTip("간지 라벨의 도서명 하단에 13자리 ISBN 번호를 함께 인쇄합니다.")
+        self.cb_print_price.setToolTip("간지 라벨에 도서 정가를 인쇄할지 여부를 선택합니다.")
+        self.cb_print_sale_price.setToolTip("매장재고 간지 라벨에 판매가를 인쇄할지 여부를 선택합니다. (정가 하단 줄바꿈 출력)")
+        self.cb_print_price.toggled.connect(lambda c: self.chk_setting_print_price.setChecked(c) if hasattr(self, 'chk_setting_print_price') and self.chk_setting_print_price.isChecked() != c else None)
+        self.cb_print_price.toggled.connect(lambda: self.update_preview() if hasattr(self, 'update_preview') else None)
+        self.cb_print_sale_price.toggled.connect(lambda c: self.chk_setting_print_sale.setChecked(c) if hasattr(self, 'chk_setting_print_sale') and self.chk_setting_print_sale.isChecked() != c else None)
+        self.cb_print_sale_price.toggled.connect(lambda: self.update_preview() if hasattr(self, 'update_preview') else None)
         self.cb_print_active.setToolTip("실제 프린터 기기로 출력 여부 (체크 해제 시 인쇄 없이 화면 입고 처리만 진행)")
         self.cb_sound_active.setToolTip("스캔 성공(고음 비프음) 및 실패/중복(경고음) 청각 피드백을 스피커로 출력합니다.")
 
@@ -1882,7 +1890,7 @@ del "%~f0"
         self.cb_one_page.toggled.connect(lambda checked: self.cb_individual.setChecked(False) if checked else None)
         self.cb_individual.toggled.connect(lambda checked: self.cb_one_page.setChecked(False) if checked else None)
 
-        for cb in [self.cb_similar, self.cb_direct_print, self.cb_one_page, self.cb_individual, self.cb_isbn_print, self.cb_print_active, self.cb_sound_active]:
+        for cb in [self.cb_similar, self.cb_direct_print, self.cb_one_page, self.cb_individual, self.cb_isbn_print, self.cb_print_price, self.cb_print_sale_price, self.cb_print_active, self.cb_sound_active]:
             middle_bar.addWidget(cb)
         middle_bar.addWidget(self.combo_format)
         
@@ -4239,6 +4247,23 @@ del "%~f0"
         apply_combobox_style(self.combo_font, font_size="13px")
         self.combo_font.currentFontChanged.connect(self.update_preview)
         control_layout.addRow("글씨체:", self.combo_font)
+
+        # ★ [금액 개별 선택 출력 옵션]
+        price_opts_layout = QHBoxLayout()
+        self.chk_setting_print_price = QCheckBox("간지 라벨에 정가 표시")
+        self.chk_setting_print_price.setChecked(True)
+        self.chk_setting_print_price.toggled.connect(lambda c: self.cb_print_price.setChecked(c) if hasattr(self, 'cb_print_price') and self.cb_print_price.isChecked() != c else None)
+        self.chk_setting_print_price.toggled.connect(self.update_preview)
+
+        self.chk_setting_print_sale = QCheckBox("간지 라벨에 판매가 표시 (매장용)")
+        self.chk_setting_print_sale.setChecked(True)
+        self.chk_setting_print_sale.toggled.connect(lambda c: self.cb_print_sale_price.setChecked(c) if hasattr(self, 'cb_print_sale_price') and self.cb_print_sale_price.isChecked() != c else None)
+        self.chk_setting_print_sale.toggled.connect(self.update_preview)
+
+        price_opts_layout.addWidget(self.chk_setting_print_price)
+        price_opts_layout.addWidget(self.chk_setting_print_sale)
+        price_opts_layout.addStretch()
+        control_layout.addRow("금액 출력 옵션:", price_opts_layout)
         
         self.sliders = {}
         slider_config = [
@@ -4553,6 +4578,9 @@ del "%~f0"
             c_str = str(row_data.get('거래처', '')).strip()
             d_str = str(row_data.get('납품처', '')).strip()
             
+            show_price = self.cb_print_price.isChecked() if hasattr(self, 'cb_print_price') else True
+            show_sale = self.cb_print_sale_price.isChecked() if hasattr(self, 'cb_print_sale_price') else True
+
             if d_str == '매장재고':
                 num_val = "매장"
                 info_text = f"[매장] {c_str}"
@@ -4566,7 +4594,16 @@ del "%~f0"
                 except: p_int = 0
                 try: s_int = int(float(str(row_data.get('판매가', 0)).replace(',', '')))
                 except: s_int = int(p_int * 0.9)
-                price_text = f"정가 {p_int:,}원 / 판매가 {s_int:,}원"
+
+                # ★ [사용자 요구사항 반영] 판매가가 정가 아래에 출력되도록 줄바꿈(/\r\n) 및 개별 선택 옵션 지원
+                if show_price and show_sale:
+                    price_text = f"정가 {p_int:,}원 /\r\n판매가 {s_int:,}원"
+                elif show_price:
+                    price_text = f"정가 {p_int:,}원"
+                elif show_sale:
+                    price_text = f"판매가 {s_int:,}원"
+                else:
+                    price_text = ""
             else:
                 num_val = str(row_data.get('순번', '1')).split('.')[0]
                 info_text = str(row_data.get('내용', '')).strip() or "기적1차 1"
@@ -4588,16 +4625,29 @@ del "%~f0"
                 if hasattr(self, 'cb_isbn_print') and self.cb_isbn_print.isChecked():
                     title_text += f"\r\n[{row_data.get('ISBN_Clean', '')}]"
                     
-                try: price_text = f"{int(float(row_data.get('정가', 0))):,} 원"
-                except: price_text = str(row_data.get('정가', '0'))
+                if show_price:
+                    try: price_text = f"{int(float(row_data.get('정가', 0))):,} 원"
+                    except: price_text = str(row_data.get('정가', '0'))
+                else:
+                    price_text = ""
         else:
+            show_price = self.cb_print_price.isChecked() if hasattr(self, 'cb_print_price') else True
+            show_sale = self.cb_print_sale_price.isChecked() if hasattr(self, 'cb_print_sale_price') else True
+
             num_val = "1"
             info_text = "기적1차 1"
             copy_text = "1-1"
             vendor_text = "하늘지음-\r\n화도4차"
             vendor_first_line = "하늘지음-"
             title_text = "111년 후 이 자리에는 커다란 삼나무가 자랄 거야 (초판 한정 부록 포함 스페셜 에디션)"
-            price_text = "16,800 원"
+            if show_price and show_sale:
+                price_text = "정가 16,800원 /\r\n판매가 15,120원"
+            elif show_price:
+                price_text = "16,800 원"
+            elif show_sale:
+                price_text = "판매가 15,120원"
+            else:
+                price_text = ""
 
         painter.setPen(QColor("black"))
         
@@ -4657,7 +4707,8 @@ del "%~f0"
         h5 = draw_wrapped_text(painter, start_x, curr_y, title_box_width, title_text, f_norm, max_lines=3, elide=True)
         curr_y += h5 + 4
 
-        draw_wrapped_text(painter, start_x, curr_y, box_width, price_text, f_norm, max_lines=1)
+        if price_text:
+            draw_wrapped_text(painter, start_x, curr_y, box_width, price_text, f_norm, max_lines=2)
 
     def trigger_physical_print_for_row(self, row_data=None, silent=False):
         from PyQt6.QtCore import QMarginsF
@@ -4743,7 +4794,9 @@ del "%~f0"
 
         data = { 
             "target_printer": selected_printer,
-            "font_family": self.combo_font.currentFont().family() or "Malgun Gothic", 
+            "font_family": self.combo_font.currentFont().family() or "Malgun Gothic",
+            "print_price": self.cb_print_price.isChecked() if hasattr(self, 'cb_print_price') else True,
+            "print_sale_price": self.cb_print_sale_price.isChecked() if hasattr(self, 'cb_print_sale_price') else True, 
             "left": self.sliders["출력 시작 여백"].value(), 
             "top": self.sliders["가로 위치"].value(), 
             "length": self.sliders["라벨 총 출력 길이"].value(), 
@@ -4771,6 +4824,16 @@ del "%~f0"
                 self.refresh_available_printers()
                 font_name = data.get("font_family", "Malgun Gothic")
                 self.combo_font.setCurrentFont(QFont(font_name, 12))
+                if hasattr(self, 'cb_print_price'):
+                    p_val = data.get("print_price", True)
+                    self.cb_print_price.setChecked(p_val)
+                    if hasattr(self, 'chk_setting_print_price'):
+                        self.chk_setting_print_price.setChecked(p_val)
+                if hasattr(self, 'cb_print_sale_price'):
+                    s_val = data.get("print_sale_price", True)
+                    self.cb_print_sale_price.setChecked(s_val)
+                    if hasattr(self, 'chk_setting_print_sale'):
+                        self.chk_setting_print_sale.setChecked(s_val)
                 if "출력 시작 여백" in self.sliders: self.sliders["출력 시작 여백"].setValue(data.get("left", 0))
                 if "가로 위치" in self.sliders: self.sliders["가로 위치"].setValue(data.get("top", 0))
                 if "라벨 총 출력 길이" in self.sliders: self.sliders["라벨 총 출력 길이"].setValue(data.get("length", 150))
