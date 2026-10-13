@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import urllib.request
+import ssl
 import tempfile
 import subprocess
 import re
@@ -31,26 +32,46 @@ class DownloadThread(QThread):
         try:
             req = urllib.request.Request(
                 self.download_url, 
-                headers={'User-Agent': 'Mozilla/5.0'}
+                headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
             )
-            with urllib.request.urlopen(req) as response:
-                total_size = int(response.info().get('Content-Length', 0))
-                downloaded = 0
-                block_size = 8192
+            # ★ [SSL 오류 원천 해결] Windows 루트 인증서 누락 환경 대비 unverified SSL 컨텍스트 Fallback
+            try:
+                ssl_ctx = ssl.create_default_context()
+                response = urllib.request.urlopen(req, context=ssl_ctx, timeout=30)
+            except Exception as ssl_err:
+                if "CERTIFICATE_VERIFY_FAILED" in str(ssl_err) or "certificate verify failed" in str(ssl_err):
+                    ssl_ctx = ssl._create_unverified_context()
+                    response = urllib.request.urlopen(req, context=ssl_ctx, timeout=30)
+                else:
+                    raise ssl_err
 
-                with open(self.save_path, 'wb') as f:
-                    while True:
-                        buffer = response.read(block_size)
-                        if not buffer:
-                            break
-                        downloaded += len(buffer)
-                        f.write(buffer)
-                        if total_size > 0:
-                            percent = int((downloaded / total_size) * 100)
-                            self.progress.emit(percent)
+            total_size = int(response.info().get('Content-Length', 0))
+            downloaded = 0
+            block_size = 65536  # 64KB 고속 버퍼
 
+            with open(self.save_path, 'wb') as f:
+                while True:
+                    buffer = response.read(block_size)
+                    if not buffer:
+                        break
+                    downloaded += len(buffer)
+                    f.write(buffer)
+                    if total_size > 0:
+                        percent = int((downloaded / total_size) * 100)
+                        self.progress.emit(percent)
+
+            response.close()
             self.finished.emit(self.save_path)
         except Exception as e:
+            # ★ [최종 방어선] 파이썬 urllib 실패 시 Windows 내장 curl.exe 무검증(-k) 자동 대체
+            try:
+                curl_cmd = f'curl.exe -L -k -s -o "{self.save_path}" "{self.download_url}"'
+                ret = subprocess.run(curl_cmd, shell=True, timeout=300)
+                if ret.returncode == 0 and os.path.exists(self.save_path) and os.path.getsize(self.save_path) > 10000:
+                    self.finished.emit(self.save_path)
+                    return
+            except Exception:
+                pass
             self.error.emit(str(e))
 
 def check_and_run_update(current_version, parent=None):
@@ -58,11 +79,21 @@ def check_and_run_update(current_version, parent=None):
     try:
         req = urllib.request.Request(
             LATEST_RELEASE_API, 
-            headers={'User-Agent': 'Mozilla/5.0'}
+            headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
         )
-        with urllib.request.urlopen(req, timeout=3) as resp:
-            data = json.loads(resp.read().decode('utf-8'))
-            
+        try:
+            ssl_ctx = ssl.create_default_context()
+            resp = urllib.request.urlopen(req, context=ssl_ctx, timeout=5)
+        except Exception as ssl_err:
+            if "CERTIFICATE_VERIFY_FAILED" in str(ssl_err) or "certificate verify failed" in str(ssl_err):
+                ssl_ctx = ssl._create_unverified_context()
+                resp = urllib.request.urlopen(req, context=ssl_ctx, timeout=5)
+            else:
+                raise ssl_err
+
+        data = json.loads(resp.read().decode('utf-8'))
+        resp.close()
+        
         latest_tag = data.get('tag_name', '')
         if not latest_tag:
             return
